@@ -78,14 +78,14 @@ def test_list_bookings_and_rate_limit():
     page2 = client.get(f"/bookings?email=ada%40example.com&limit=2&cursor={page['next_cursor']}", headers=HEADERS).json()
     assert len(page2["bookings"]) == 2
 
-
 def teardown_module(_module):
     try:
         client.close()
     except Exception:
         pass
-    os.unlink(tmp_db.name)
 
+    main.engine.dispose()
+    os.unlink(tmp_db.name)
 
 def test_simultaneous_requests_cannot_confirm_same_slot():
     from concurrent.futures import ThreadPoolExecutor
