@@ -12,7 +12,7 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any
 
-from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, Security
+from fastapi import Body, Depends, FastAPI, Header, HTTPException, Query, Request, Security
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.security import APIKeyHeader
 from fastapi.exceptions import RequestValidationError
@@ -292,7 +292,7 @@ def homepage():
 # Level 1: reset slots and list slots
 # ---------------------------------------------------------------------------
 @app.post("/reset", dependencies=[Depends(require_api_key)])
-def reset_slots(payload: dict[str, Any], db: Session = Depends(get_db)):
+def reset_slots(payload: dict[str, Any] = Body(...), db: Session = Depends(get_db)):
     incoming_slots = payload.get("slots")
     if not isinstance(incoming_slots, list):
         raise APIError(400, "slots must be an array")
